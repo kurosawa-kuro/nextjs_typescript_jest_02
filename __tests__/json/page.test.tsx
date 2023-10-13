@@ -2,10 +2,10 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
-import PostsClientComponent from '../../src/app/json/page';
+import PostsPage from '../../src/app/json/page';
 
-// MSWのハンドラを定義
-const handlers = [
+// Define mock server handlers
+const postHandlers = [
   rest.get('https://jsonplaceholder.typicode.com/posts', (req, res, ctx) => {
     return res(
       ctx.json([
@@ -26,19 +26,19 @@ const handlers = [
   })
 ];
 
-// MSWのサーバーをセットアップ
-const server = setupServer(...handlers);
+// Initialize mock server
+const mockServer = setupServer(...postHandlers);
 
-describe('PostsClientComponent', () => {
-  // Jestのセットアップとクリーンアップ
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+describe('PostsPage', () => {
+  // Setup and cleanup for Jest tests with mock server
+  beforeAll(() => mockServer.listen());
+  afterEach(() => mockServer.resetHandlers());
+  afterAll(() => mockServer.close());
 
-  it('fetches and displays posts', async () => {
-    render(<PostsClientComponent />);
+  it('should display fetched posts', async () => {
+    render(<PostsPage />);
     
-    // Wait for Axios response
+    // Wait for the mocked API call to resolve and render
     await waitFor(() => screen.getByText("Sample title 1"));
 
     expect(screen.getByText("Sample title 1")).toBeInTheDocument();
