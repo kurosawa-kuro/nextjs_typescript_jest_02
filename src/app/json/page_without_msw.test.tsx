@@ -1,14 +1,19 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
+import userEvent from '@testing-library/user-event';
 import PostsClientComponent from './page';
+import axios from 'axios';
 
-// MSWのハンドラを定義
-const handlers = [
-  rest.get('https://jsonplaceholder.typicode.com/posts', (req, res, ctx) => {
-    return res(
-      ctx.json([
+// Axios のモックをここで設定
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+mockedAxios.get.mockResolvedValue({ data: [] });
+
+describe('PostsClientComponent', () => {
+  it('fetches and displays posts', async () => {
+    // Mock successful response from Axios
+    mockedAxios.get.mockResolvedValueOnce({
+      data: [
         {
           userId: 1,
           id: 1,
@@ -21,21 +26,9 @@ const handlers = [
           title: "Sample title 2",
           body: "Sample body 2"
         },
-      ])
-    );
-  })
-];
+      ],
+    });
 
-// MSWのサーバーをセットアップ
-const server = setupServer(...handlers);
-
-describe('PostsClientComponent', () => {
-  // Jestのセットアップとクリーンアップ
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
-  it('fetches and displays posts', async () => {
     render(<PostsClientComponent />);
     
     // Wait for Axios response
