@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import PostsClientComponent from './page';
+import PostsClientComponent from '../../src/app/json/page';
 import axios from 'axios';
 
 // Axios のモックをここで設定

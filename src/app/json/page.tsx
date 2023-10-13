@@ -1,39 +1,38 @@
-// nextjs_training/nextjs_typescript_jest_02/src/app/json/page.tsx
 "use client"
 import React, { useEffect, useState } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 
-type PostType = {
+type Post = {
   userId: number;
   id: number;
   title: string;
   body: string;
 };
 
-export default function PostsClientComponent() {
-  const [posts, setPosts] = useState<PostType[]>([]);
+export default function PostList() {
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
   
   useEffect(() => {
-    const fetchData = async () => {
+    const retrievePosts = async () => {
       try {
-        const response = await Axios.get<PostType[]>('https://jsonplaceholder.typicode.com/posts');
-        setPosts(response.data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
+        const { data } = await axios.get<Post[]>('https://jsonplaceholder.typicode.com/posts');
+        setAllPosts(data);
+      } catch (fetchError) {
+        console.error("Error retrieving posts:", fetchError);
       }
     };
     
-    fetchData();
+    retrievePosts();
   }, []);
 
   return (
-    <section className="w-full max-w-2xl mt-10">
+    <section className="w-full max-w-2xl mt-10 mx-auto">
         <h2 className="text-2xl font-semibold mb-4">Posts:</h2>
         <ul>
-          {posts.map(post => (
-            <li key={post.id} className="mb-4">
-              <h3 className="text-xl font-medium">{post.title}</h3>
-              <p className="text-gray-600">{post.body}</p>
+          {allPosts.map(postDetail => (
+            <li key={postDetail.id} className="mb-4">
+              <h3 className="text-xl font-medium">{postDetail.title}</h3>
+              <p className="text-gray-600">{postDetail.body}</p>
             </li>
           ))}
         </ul>

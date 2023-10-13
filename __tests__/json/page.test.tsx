@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
-import PostsClientComponent from './page';
+import PostsClientComponent from '../../src/app/json/page';
 
 // MSWのハンドラを定義
 const handlers = [
