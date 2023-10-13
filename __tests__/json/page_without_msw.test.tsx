@@ -7,7 +7,6 @@ import axios from 'axios';
 const axiosMock = axios as jest.Mocked<typeof axios>;
 
 jest.mock('axios');
-axiosMock.get.mockResolvedValue({ data: [] });
 
 describe('PostsPage', () => {
   const mockPosts = [
@@ -26,7 +25,12 @@ describe('PostsPage', () => {
   ];
 
   it('fetches and displays posts', async () => {
-    axiosMock.get.mockResolvedValueOnce({ data: mockPosts });
+    axiosMock.get.mockImplementationOnce((url) => {
+      if (url === 'https://jsonplaceholder.typicode.com/posts') {
+        return Promise.resolve({ data: mockPosts });
+      }
+      return Promise.reject(new Error('Not found'));
+    });
 
     render(<PostsPage />);
     
