@@ -15,7 +15,7 @@ describe('Page', () => {
     { userId: 2, id: 2, title: "Sample title 2", body: "Sample body 2" }
   ];
 
-  it('fetches data', async () => {
+  it('displays data', async () => {
     // API呼び出しの動作をモック化
     mock.get.mockImplementationOnce((url) => {
       if (url === 'https://jsonplaceholder.typicode.com/posts') return Promise.resolve({ data });
